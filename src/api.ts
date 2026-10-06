@@ -5,6 +5,7 @@ import { callGoogleStream, extractPromptFromGeminiBody } from "./providers/googl
 import { callOpenAIStream } from "./providers/openai.ts";
 import { callAnthropicStream } from "./providers/anthropic.ts";
 import { callOllamaSearch } from "./providers/ollama.ts";
+import { callZaiStream } from "./providers/zai.ts";
 import type { StreamResult } from "./providers/types.ts";
 
 export { getProviderKind, getConfig } from "./providers/config.ts";
@@ -41,6 +42,9 @@ export async function callApiStream(
     }
     if (kind === "anthropic" || kind === "deepseek") {
         return callAnthropicStream(ctx, model, prompt, onUpdate, signal);
+    }
+    if (kind === "zai") {
+        return callZaiStream(ctx, model, prompt, onUpdate, signal);
     }
 
     throw new Error(`Unsupported provider for web search: ${model.provider} (${model.api})`);

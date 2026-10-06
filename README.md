@@ -92,6 +92,36 @@ the prompt; Gemini's verified URL Context retrieval remains Gemini-only.
 
 This integration was informed by [pi-deepseek-search](https://github.com/bxff/pi-deepseek-search).
 
+### Z.AI (GLM)
+
+Select a model from pi's `zai` provider and authenticate with `/login` or
+`ZAI_API_KEY`. Search automatically uses Z.AI's Anthropic-compatible endpoint
+(`https://api.z.ai/api/anthropic/v1/messages`) with the same model and
+credentials — server-side web search is not available on the OpenAI-compatible
+coding/paas route that pi configures as the model base URL, so the base URL is
+rewritten for search requests. Known Z.AI hosts (`api.z.ai`, `open.bigmodel.cn`)
+map to their Anthropic-compatible endpoint; a configured proxy base URL is
+preserved and routed through its `/anthropic/v1/messages` endpoint, and the
+proxy must support that route.
+
+Z.AI streams its server-side tool call as text chatter (tool input and raw
+result summary) around the structured `server_tool_use`/`tool_result` blocks;
+this integration keeps the chatter out of the answer and extracts citations
+from the structured `tool_result` payload.
+
+To use Z.AI search with another conversation model, set `web-search.json`:
+
+```json
+{
+  "provider": "zai",
+  "model": "glm-4.7"
+}
+```
+
+The selected model must be registered in pi. Requests support cancellation
+through pi. Additional `urls` are included in the prompt; Gemini's verified
+URL Context retrieval remains Gemini-only.
+
 ## Test
 
 ```bash
